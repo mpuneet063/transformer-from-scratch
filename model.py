@@ -182,7 +182,7 @@ class ProjectionLayer(nn.Module):
         self.proj = nn.Linear(d_model, vocab_size)  # linear layer to project the decoder output to the vocabulary size
 
     def forward(self, x):
-        return torch.log_softmax(self.proj(x), dim=-1)  # apply log softmax to get the log probabilities of the next token in the sequence; log softmax is used instead of softmax for numerical stability and to work better with the negative log-likelihood loss function during training.
+        return self.proj(x)
 
 
 
@@ -197,7 +197,7 @@ class Transformer(nn.Module):
         self.src_pos = src_pos  # source positional encoding layer
         self.projection_layer = projection_layer  # projection layer to map decoder output to vocabulary size
 
-    def encode(self, src, tgt, src_mask=None, tgt_mask=None):
+    def encode(self, src, src_mask=None):
         src = self.src_embedding(src)  # embed the source sequence
         src = self.src_pos(src)  # add positional encoding to the source sequence
         return self.encoder(src, src_mask)  # pass the source sequence through the encoder
